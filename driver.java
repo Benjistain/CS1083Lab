@@ -1,3 +1,14 @@
+///////////////////////////////////////
+//--CS 1083 Lab: Driver Class--
+//Last Edited by: Bailey
+//Last Edit Date/Time: Jan 14/19, 12:50
+//Changelog:
+//Jan 14/19, 12:50
+//++Added Code Header and Changelog
+//++Added Paragraph Spacing between "Menus" when running code
+//
+//*Add next editlist here*
+///////////////////////////////////////
 import java.util.Scanner;
 
 class driver
@@ -11,19 +22,19 @@ class driver
 		
 		do
 		{
-		 	System.out.println("Menu: ");
+			System.out.println("\nMenu: ");
 			System.out.println("-----");
 			System.out.println("\t1-Create project");
 			System.out.println("\t2-Add file to project");
 			System.out.println("\t3-Print list of files in project");
-			System.out.println("Your choice? (0 to quit)");
+			System.out.println("Your choice? (0 to quit): ");
 			x = scan.nextInt();
 			scan.nextLine();
 			
 			switch(x)
 			{
 				case 1: 
-					System.out.println("Enter a name: ");
+					System.out.println("\nEnter a name: ");
 					String name = scan.nextLine();
 					
 					obj = new Project(name);
@@ -33,7 +44,7 @@ class driver
 				case 2:
 					if (flag)
 					{
-						System.out.println("Enter name of file: ");
+						System.out.println("\nEnter name of file: ");
 						String fileName = scan.nextLine();
 						
 						JavaFile newFile = new JavaFile(fileName);
@@ -42,7 +53,7 @@ class driver
 					
 					else 
 					{
-					 	System.out.println("Error: no project exists");
+						 System.out.println("\nError: no project exists");
 					}
 					
 					break;
@@ -56,8 +67,9 @@ class driver
 					
 					else
 					{
-					 	System.out.println("No files in the projects");
+					 	System.out.println("\nNo files in the projects");
 					}
+
 					break;
 			}
 					

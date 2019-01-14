@@ -1,3 +1,10 @@
+///////////////////////////////////////
+//--CS 1083 Lab: JavaFile Class--
+//Last Edited by: N/A
+//Last Edit Date/Time: N/A
+//Changelog:
+//*Add next editlist here*
+///////////////////////////////////////
 class JavaFile
 {
  	private String name;
