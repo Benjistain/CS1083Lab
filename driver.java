@@ -22,7 +22,7 @@ class driver
 		
 		do
 		{
-			System.out.println("\n\nMenu: ");
+			System.out.println("\nMenu: ");
 			System.out.println("-----");
 			System.out.println("\t1-Create project");
 			System.out.println("\t2-Add file to project");
@@ -34,7 +34,7 @@ class driver
 			switch(x)
 			{
 				case 1: 
-					System.out.println("\n\nEnter a name: ");
+					System.out.println("\nEnter a name: ");
 					String name = scan.nextLine();
 					
 					obj = new Project(name);
@@ -44,7 +44,7 @@ class driver
 				case 2:
 					if (flag)
 					{
-						System.out.println("\n\nEnter name of file: ");
+						System.out.println("\nEnter name of file: ");
 						String fileName = scan.nextLine();
 						
 						JavaFile newFile = new JavaFile(fileName);
@@ -53,7 +53,7 @@ class driver
 					
 					else 
 					{
-						 System.out.println("\n\nError: no project exists");
+						 System.out.println("\nError: no project exists");
 					}
 					
 					break;
@@ -67,7 +67,7 @@ class driver
 					
 					else
 					{
-					 	System.out.println("\n\nNo files in the projects");
+					 	System.out.println("\nNo files in the projects");
 					}
 
 					break;

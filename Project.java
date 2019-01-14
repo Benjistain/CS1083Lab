@@ -46,6 +46,5 @@ class Project
 		{
 			System.out.println("\t"+objects[i]);
 		}
-		System.out.println();
 	}
 }
