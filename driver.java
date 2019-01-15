@@ -26,7 +26,8 @@ class driver
 			System.out.println("-----");
 			System.out.println("\t1-Create project");
 			System.out.println("\t2-Add file to project");
-			System.out.println("\t3-Print list of files in project");
+			System.out.println("\t3-Remove file from project");
+			System.out.println("\t4-Print list of files in project");
 			System.out.println("Your choice? (0 to quit): ");
 			x = scan.nextInt();
 			scan.nextLine();
@@ -50,18 +51,21 @@ class driver
 						JavaFile newFile = new JavaFile(fileName);
 					 	obj.addFile(newFile);
 					}
-					
 					else 
 					{
 						 System.out.println("\nError: no project exists");
 					}
-					
+					break;
+
+				case 3:
+					System.out.print("Enter name of file to delete: ");
+					String fileName = scan.nextLine();
+					obj.removeFile(fileName);
 					break;
 				
-				case 3:
+				case 4:
 					if (flag)
 					{
-						
 						obj.printFiles();
 					}
 					
@@ -74,5 +78,8 @@ class driver
 			}
 					
 		}while (x != 0);
+
+		System.out.println("Test: Search for Ben.java");
+		System.out.println(obj.search("Ben.java"));
 	}
 }

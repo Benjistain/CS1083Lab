@@ -35,6 +35,49 @@ class Project
 		objects[count] = newFile;
 		count++;
 	}
+
+	public int search(String name)
+	{
+		boolean found = false;
+		int i=0;
+
+		while(i<count && !found)
+		{
+			if (name.equals(objects[i].getName()))
+			{
+				found = true;
+			}
+			else
+				i++;
+		}
+
+		if (found)
+			return i;
+		else
+			return -1;
+	}
+
+	public void removeFile(String fileName)
+	{
+		int index = search(fileName);
+		if (index != 0)
+		{
+			if (index >= count)
+			{
+				System.out.println("Error: Invalid index");
+			}
+			else
+			{
+				for (int i=index; i<count-1; i++)
+				{
+					objects[i] = objects[i+1];
+				}
+				count--;
+			}
+		}
+		else
+			System.out.println("File not found");
+	}
 	
 	public void printFiles()
 	{
