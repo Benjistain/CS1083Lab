@@ -8,31 +8,31 @@
 class Project
 {
 	private String name;
-	private JavaFile[] objects;
+	private JavaFile[] files;
 	private int count;
 	
 	public Project(String name)
 	{
 	 	this.name = name;
-		objects = new JavaFile[1];
+		files = new JavaFile[1];
 		count = 0;
 	}
 	
 	public void addFile(JavaFile newFile)
 	{
-		if (objects.length == count)
+		if (files.length == count)
 		{
-		 	JavaFile[] temp = new JavaFile[objects.length * 2];
+		 	JavaFile[] temp = new JavaFile[files.length * 2];
 			
-			for(int i=0; i < objects.length; i++)
+			for(int i=0; i < files.length; i++)
 			{
-			 	temp[i] = objects[i];
+			 	temp[i] = files[i];
 			}
 			
-			objects = temp;
+			files = temp;
 		}
 		
-		objects[count] = newFile;
+		files[count] = newFile;
 		count++;
 	}
 
@@ -43,7 +43,7 @@ class Project
 
 		while(i<count && !found)
 		{
-			if (name.equals(objects[i].getName()))
+			if (name.equals(files[i].getName()))
 			{
 				found = true;
 			}
@@ -60,7 +60,7 @@ class Project
 	public void removeFile(String fileName)
 	{
 		int index = search(fileName);
-		if (index != 0)
+		if (index != -1)
 		{
 			if (index >= count)
 			{
@@ -70,7 +70,7 @@ class Project
 			{
 				for (int i=index; i<count-1; i++)
 				{
-					objects[i] = objects[i+1];
+					files[i] = files[i+1];
 				}
 				count--;
 			}
@@ -87,7 +87,7 @@ class Project
 		System.out.println("File names: ");
 	 	for(int i=0; i<count; i++)
 		{
-			System.out.println("\t"+objects[i]);
+			System.out.println("\t"+files[i]);
 		}
 	}
 }

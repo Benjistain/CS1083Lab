@@ -17,7 +17,7 @@ class driver
 	{
 		Scanner scan = new Scanner(System.in);
 		int x;
-		Project obj = new Project("");
+		Project proj = new Project("");
 		boolean flag = false;
 		
 		do
@@ -38,7 +38,7 @@ class driver
 					System.out.println("\nEnter a name: ");
 					String name = scan.nextLine();
 					
-					obj = new Project(name);
+					proj = new Project(name);
 					flag = true;
 					break;
 				
@@ -49,7 +49,7 @@ class driver
 						String fileName = scan.nextLine();
 						
 						JavaFile newFile = new JavaFile(fileName);
-					 	obj.addFile(newFile);
+					 	proj.addFile(newFile);
 					}
 					else 
 					{
@@ -60,13 +60,13 @@ class driver
 				case 3:
 					System.out.print("Enter name of file to delete: ");
 					String fileName = scan.nextLine();
-					obj.removeFile(fileName);
+					proj.removeFile(fileName);
 					break;
 				
 				case 4:
 					if (flag)
 					{
-						obj.printFiles();
+						proj.printFiles();
 					}
 					
 					else
@@ -78,8 +78,5 @@ class driver
 			}
 					
 		}while (x != 0);
-
-		System.out.println("Test: Search for Ben.java");
-		System.out.println(obj.search("Ben.java"));
 	}
 }
