@@ -5,6 +5,8 @@
 //Changelog:
 //*Add next editlist here*
 ///////////////////////////////////////
+import java.util.Scanner;
+
 class Project
 {
 	private String name;
@@ -23,7 +25,6 @@ class Project
 		if (files.length == count)
 		{
 		 	JavaFile[] temp = new JavaFile[files.length * 2];
-			
 			for(int i=0; i < files.length; i++)
 			{
 			 	temp[i] = files[i];
@@ -79,6 +80,12 @@ class Project
 			System.out.println("File not found");
 	}
 	
+	public void readFile(String fileName) throws Exception
+	{
+		int index = search(fileName);
+		System.out.print(files[index].getContents());
+	}
+	
 	public void printFiles()
 	{
 		
@@ -88,6 +95,14 @@ class Project
 	 	for(int i=0; i<count; i++)
 		{
 			System.out.println("\t"+files[i]);
+		}
+	}
+	
+	public void compile() throws Exception
+	{
+		for (int i=0; i<count; i++)
+		{
+			Runtime.getRuntime().exec("javac " + files[i].getName() + ".java");
 		}
 	}
 }

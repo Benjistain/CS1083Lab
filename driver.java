@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 class driver
 {
- 	public static void main (String []args)
+ 	public static void main (String []args) throws Exception
 	{
 		Scanner scan = new Scanner(System.in);
 		int x;
@@ -27,7 +27,9 @@ class driver
 			System.out.println("\t1-Create project");
 			System.out.println("\t2-Add file to project");
 			System.out.println("\t3-Remove file from project");
-			System.out.println("\t4-Print list of files in project");
+			System.out.println("\t4-Compile project");
+			System.out.println("\t5-Read file contents");
+			System.out.println("\t6-Print list of files in project");
 			System.out.println("Your choice? (0 to quit): ");
 			x = scan.nextInt();
 			scan.nextLine();
@@ -42,39 +44,57 @@ class driver
 					flag = true;
 					break;
 				
-				case 2:
-					if (flag)
-					{
+			}
+			
+			if (flag)
+			{
+			
+				switch (x)
+				{
+					case 2:
 						System.out.println("\nEnter name of file: ");
 						String fileName = scan.nextLine();
 						
 						JavaFile newFile = new JavaFile(fileName);
 					 	proj.addFile(newFile);
-					}
-					else 
-					{
-						 System.out.println("\nError: no project exists");
-					}
-					break;
-
-				case 3:
-					System.out.print("Enter name of file to delete: ");
-					String fileName = scan.nextLine();
-					proj.removeFile(fileName);
-					break;
-				
-				case 4:
-					if (flag)
-					{
-						proj.printFiles();
-					}
+						break;
+	
+					case 3:
+						System.out.print("Enter name of file to delete: ");
+						fileName = scan.nextLine();
+						proj.removeFile(fileName);
+						break;
+			
+					case 4:
+						// compile entire project
+						proj.compile();
+						break;
+						
+					case 5: 
+						//Print contents of the file specified by user
+						System.out.print("Enter name of file to read: ");
+						fileName = scan.nextLine();
+						
+						proj.readFile(fileName);
+						break;
 					
-					else
-					{
-					 	System.out.println("\nNo files in the projects");
-					}
-
-					break;
+					case 6:
+						if (flag)
+						{
+							proj.printFiles();
+						}
+						
+						else
+						{
+						 	System.out.println("\nNo files in the projects");
+						}
+	
+						break;
+				}
+			}
+			else 
+			{
+				System.out.println("\nError: no project exists");
 			}
 					
 		}while (x != 0);
