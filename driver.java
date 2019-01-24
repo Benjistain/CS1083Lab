@@ -37,6 +37,7 @@ class driver
 			switch(x)
 			{
 				case 1: 
+					// Create a new project, allowing access to other commands
 					System.out.println("\nEnter a name: ");
 					String name = scan.nextLine();
 					
@@ -52,6 +53,7 @@ class driver
 				switch (x)
 				{
 					case 2:
+						// Add a new file to the project
 						System.out.println("\nEnter name of file: ");
 						String fileName = scan.nextLine();
 						
@@ -60,6 +62,7 @@ class driver
 						break;
 	
 					case 3:
+						// Delete a file from the project
 						System.out.print("Enter name of file to delete: ");
 						fileName = scan.nextLine();
 						proj.removeFile(fileName);
@@ -79,16 +82,8 @@ class driver
 						break;
 					
 					case 6:
-						if (flag)
-						{
-							proj.printFiles();
-						}
-						
-						else
-						{
-						 	System.out.println("\nNo files in the projects");
-						}
-	
+						// Print file names in the project
+						proj.printFiles();
 						break;
 				}
 			}
