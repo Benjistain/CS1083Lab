@@ -109,7 +109,37 @@ class Project
 	// Compile all files in the project
 	public void compile() throws Exception
 	{
-		for (int i=0; i<count; i++)
-			Runtime.getRuntime().exec("javac " + files[i].getName() + ".java");
+		boolean flag = true;
+		int i = 0;
+		while(flag && i < count)
+		{
+			Process p1 = Runtime.getRuntime().exec("javac " + files[i].getName()+ ".java");
+			Scanner scan = new Scanner(p1.getErrorStream());
+			System.out.println("\nCompiling "+ files[i].getName()+".java");
+			if (scan.hasNextLine())
+			{
+				while(scan.hasNextLine())
+				{
+					System.out.print(scan.nextLine() + "\n");
+				}
+				flag = false;
+			}
+			else
+			{
+				System.out.println("Compiled "+ files[i].getName()+".java successfully");
+			}
+			i++;	
+		}
+	}
+	
+	//Run the last file in array
+	public void run() throws Exception
+	{
+		Process p1 = Runtime.getRuntime().exec("java " + files[count-1].getName());
+		Scanner scan = new Scanner(p1.getInputStream());
+		while(scan.hasNextLine())
+		{
+			System.out.print(scan.nextLine() + "\n");
+		}
 	}
 }

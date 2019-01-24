@@ -29,7 +29,8 @@ class driver
 			System.out.println("\t3-Remove file from project");
 			System.out.println("\t4-Compile project");
 			System.out.println("\t5-Read file contents");
-			System.out.println("\t6-Print list of files in project");
+			System.out.println("\t6-Run file contents");
+			System.out.println("\t7-Print list of files in project");
 			System.out.println("Your choice? (0 to quit): ");
 			x = scan.nextInt();
 			scan.nextLine();
@@ -80,8 +81,13 @@ class driver
 						
 						proj.readFile(fileName);
 						break;
-					
+						
 					case 6:
+						
+						proj.run();
+						break;
+					
+					case 7:
 						// Print file names in the project
 						proj.printFiles();
 						break;
