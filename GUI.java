@@ -9,6 +9,7 @@ import javafx.scene.text.Font;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -16,81 +17,74 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.ChoiceBox;
 import java.util.Optional;
 
-public class TextAndButton extends Application
+public class GUI extends Application
 {
-   // here you put the declaration of the controls needed
+   // declaration of the controls needed
    Button compileButton;
 	Button runButton;
 	TextArea mainText;
 	Label message;
 	Label bar;
+	
+	ChoiceBox<String> FileTab;
+	String[] fileOptions = {"File                ", "New Project", "New", "Add", "Delete"};
+	
+	ChoiceBox<String> OpenTab;
+	String[] openOptions = {"Open"};
+	
+	// Background code
+	Project proj = new Project("");
+	boolean flag = false;
+
    
-   public void start(Stage primaryStage)
+   public void start(Stage primaryStage) throws Exception
    {
-      // here you put the code to indicate what the window will look like
+      // code to indicate what the window will look like
       Font mainFont = new Font("courrier", 24);
 		
-		bar = new Label();
-      bar.setFont(mainFont);
-      
-      MenuBar menuBar = new MenuBar();
-		
-		Menu menuLetter = new Menu("File");      
-		MenuItem aMenu = new MenuItem("new project");
-		MenuItem bMenu = new MenuItem("add");
-		MenuItem dMenu = new MenuItem("delete");
-		
-      //aMenu.setOnAction(this::processAmenu);
-		aMenu.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-      			processNewButton(e);
-            }
-        });
-		  
-		 //aMenu.setOnAction(this::processAmenu);
-		bMenu.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-      			processAddButton(e);
-            }
-        });
-		  //aMenu.setOnAction(this::processAmenu);
-		dMenu.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-      			processDeleteButton(e);
-            }
-        });
-		
-      menuLetter.getItems().addAll(aMenu, bMenu, dMenu);
-      
-      Menu menuAction = new Menu("Open");      
-      MenuItem clearMenu = new MenuItem("where files are");
-      //clearMenu.setOnAction(this::processClearMenu);
-		clearMenu.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-      			processOpenButton(e);
-            }
-        });
-      menuAction.getItems().addAll(clearMenu);
-      
-      menuBar.getMenus().addAll(menuLetter, menuAction);
-      
-      VBox vpane = new VBox(menuBar, bar);
+		FileTab = new ChoiceBox<String>();
+      FileTab.setStyle("-fx-font: 24px \"Courrier\";");  
+      FileTab.getItems().addAll(fileOptions);
+      FileTab.getSelectionModel().select(0);
+
+		OpenTab = new ChoiceBox<String>();
+      OpenTab.setStyle("-fx-font: 24px \"Courrier\";");  
+      OpenTab.getItems().addAll(openOptions);
+      OpenTab.getSelectionModel().select(0);
+
       
 		mainText = new TextArea();
       mainText.setFont(mainFont);
-      mainText.setPrefRowCount(10);
+      mainText.setPrefRowCount(15);
       mainText.setPrefColumnCount(50);
       mainText.setWrapText(true);
 		
 		message = new Label("output");
       message.setFont(mainFont);
+		message.setWrapText(true);
+		
+  		FileTab.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+               processFileTab(e);
+            }
+        });
+		  
+		OpenTab.setOnAction(new EventHandler<ActionEvent>() 
+		{
+            public void handle(ActionEvent e) 
+				{
+               processOpenTab(e);
+            }
+      });
+
+
 		
       compileButton = new Button("compile");
       compileButton.setFont(mainFont);
-      //compileButton.setOnAction(this::processButton);
-		compileButton.setOnAction(new EventHandler<ActionEvent>() {
+ 		compileButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                processCompileButton(e);
             }
@@ -98,18 +92,23 @@ public class TextAndButton extends Application
 		  
 		runButton = new Button("run");
       runButton.setFont(mainFont);
-      //runButton.setOnAction(this::processButton);
 		runButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                processRunButton(e);
             }
         });
 		  
-		FlowPane panre = new FlowPane(compileButton, runButton);
+		GridPane outerGrid = new GridPane();
+		outerGrid.add(FileTab, 0, 0, 3, 1);
+		outerGrid.add(OpenTab, 3, 0);
+		outerGrid.add(compileButton, 4, 0);
+		outerGrid.add(runButton, 5, 0);
+		outerGrid.add(mainText, 0, 3, 20, 4);
+      outerGrid.add(message, 0, 7, 10, 3);
 
-		        
-      VBox pane = new VBox(vpane, panre, mainText, message);
-      Scene theScene = new Scene(pane, 1200, 800);
+      //GridPane outerGrid = new GridPane(vpane, panre, mainText, message);
+
+      Scene theScene = new Scene(outerGrid, 1200, 800);
       primaryStage.setTitle("The Hutt");
       primaryStage.setScene(theScene);
       primaryStage.show();
@@ -122,41 +121,51 @@ public class TextAndButton extends Application
       alert.showAndWait();
    }
 	
+	
 	public void processCompileButton(ActionEvent event)
    {
       Alert alert = new Alert(AlertType.INFORMATION, 
-                     "compile!" , ButtonType.OK);
+                     "Compiling!" , ButtonType.OK);
       alert.showAndWait();
+		
+		//proj.compile();
    }
 	
-	 
-   public void processNewButton(ActionEvent event)
-   {
-      Alert alert = new Alert(AlertType.INFORMATION, 
-                     "new project!" , ButtonType.OK);
-      alert.showAndWait();
-   }
-	
-	public void processDeleteButton(ActionEvent event)
-   {
-      Alert alert = new Alert(AlertType.INFORMATION, 
-                     "delete!" , ButtonType.OK);
-      alert.showAndWait();
-   } 
-   public void processAddButton(ActionEvent event)
-   {
-      Alert alert = new Alert(AlertType.INFORMATION, 
-                     "add!" , ButtonType.OK);
-      alert.showAndWait();
-   }
-	
-	public void processOpenButton(ActionEvent event)
-   {
-      Alert alert = new Alert(AlertType.INFORMATION, 
-                     "open!" , ButtonType.OK);
-      alert.showAndWait();
-   }
+	public void processFileTab(ActionEvent event)
+	{
+		//Alert alert = new Alert(AlertType.INFORMATION, "FileTab!" , ButtonType.OK);
+		//alert.showAndWait();
+		
+		if (FileTab.getSelectionModel().getSelectedIndex() == 1)
+		{
+			// make popup to take name of proj
+			TextInputDialog dialog = new TextInputDialog();
+      	dialog.setTitle("New Project");
+      	dialog.setHeaderText("Enter the name of your project");
+      	Optional<String> result = dialog.showAndWait();
+      	if (result.isPresent())
+      	{
+         	String input = dialog.getEditor().getText();
+         	message.setText("New project created: " + input);
+				
+				proj = new Project(input);
+				flag = true;
 
+      	}
+
+		}
+		// When adding a new file to open tab, use this code: filesChoice.getItems().add(newFileName); 
+		
+		
+	}
+	
+	public void processOpenTab(ActionEvent event)
+	{
+		Alert alert = new Alert(AlertType.INFORMATION, "OpenTab!" , ButtonType.OK);
+		alert.showAndWait();
+	}
+
+	
    public static void main(String[] args)
    {
       launch(args);
