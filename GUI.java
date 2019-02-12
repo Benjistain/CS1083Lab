@@ -34,7 +34,6 @@ public class GUI extends Application
 	Project proj = new Project("");
 	boolean flag = false;
 
-   
    public void start(Stage primaryStage) throws Exception
    {
       // code to indicate what the window will look like
@@ -60,7 +59,7 @@ public class GUI extends Application
       mainText.setWrapText(true);
       
       // Setup initial output
-		outputLabel = new Label("output");
+		outputLabel = new Label("To begin, create a new project.");
       outputLabel.setFont(mainFont);
 		outputLabel.setWrapText(true);
       
@@ -85,6 +84,8 @@ public class GUI extends Application
       // Create compile button
       compileButton = new Button("Compile");
       compileButton.setFont(mainFont);
+
+      // When the compile button is clicked
       compileButton.setOnAction(new EventHandler<ActionEvent>() 
       {
          public void handle(ActionEvent e) 
@@ -96,6 +97,8 @@ public class GUI extends Application
       // Create run button
 		runButton = new Button("Run");
       runButton.setFont(mainFont);
+
+      // When the run button is clicked
       runButton.setOnAction(new EventHandler<ActionEvent>() 
       {
          public void handle(ActionEvent e) 
@@ -126,6 +129,11 @@ public class GUI extends Application
       Alert alert = new Alert(AlertType.INFORMATION, 
                      "run!" , ButtonType.OK);
       alert.showAndWait();
+
+      // code from driver: 
+      /* 
+      proj.run();
+      */
    }
    
    // When the compile button is clicked
@@ -142,6 +150,7 @@ public class GUI extends Application
       }
       catch (Exception exc)
       {
+         // If there is a compile error display this message
          Alert error = new Alert(AlertType.INFORMATION, 
                   "Error processing compile command" , ButtonType.OK);
       }
@@ -158,15 +167,17 @@ public class GUI extends Application
 			TextInputDialog dialog = new TextInputDialog();
       	dialog.setTitle("New Project");
       	dialog.setHeaderText("Enter the name of your project");
-      	Optional<String> result = dialog.showAndWait();
-      	if (result.isPresent())
-      	{
+         //Optional<String> result = dialog.showAndWait();
+      	//if (result.isPresent())
+      	//{
+         dialog.showAndWait();
+         
          	String input = dialog.getEditor().getText();
             proj = new Project(input);
             flag = true;
             
             outputLabel.setText("New project created: " + input);
-      	}
+      	//}
       }
       else if (FileTab.getSelectionModel().getSelectedIndex() == 2)
       {
@@ -218,4 +229,3 @@ public class GUI extends Application
       launch(args);
    }
 }
-
