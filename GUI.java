@@ -13,7 +13,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ChoiceBox;
-import java.util.Optional;
 
 public class GUI extends Application
 {
@@ -126,8 +125,7 @@ public class GUI extends Application
    // When the run button is clicked
    public void processRunButton(ActionEvent event)
    {
-      Alert alert = new Alert(AlertType.INFORMATION, 
-                     "run!" , ButtonType.OK);
+      Alert alert = new Alert(AlertType.INFORMATION, "run!" , ButtonType.OK);
       alert.showAndWait();
 
       // code from driver: 
@@ -139,8 +137,7 @@ public class GUI extends Application
    // When the compile button is clicked
 	public void processCompileButton(ActionEvent event)
    {
-      Alert alert = new Alert(AlertType.INFORMATION, 
-                     "Compiling!" , ButtonType.OK);
+      Alert alert = new Alert(AlertType.INFORMATION, "Compiling!" , ButtonType.OK);
       alert.showAndWait();
       
       // Try to compile project
@@ -151,8 +148,7 @@ public class GUI extends Application
       catch (Exception exc)
       {
          // If there is a compile error display this message
-         Alert error = new Alert(AlertType.INFORMATION, 
-                  "Error processing compile command" , ButtonType.OK);
+         Alert error = new Alert(AlertType.INFORMATION, "Error processing compile command" , ButtonType.OK);
       }
    }
    
@@ -220,7 +216,7 @@ public class GUI extends Application
 		Alert alert = new Alert(AlertType.INFORMATION, "OpenTab!" , ButtonType.OK);
       alert.showAndWait();
       // This method should show the contents of the selected file
-      
+
       // driver code
       /*
       System.out.print("Enter name of file to read: ");
