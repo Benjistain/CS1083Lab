@@ -1,18 +1,13 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
 import javafx.scene.text.Font;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.GridPane;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -22,20 +17,20 @@ import java.util.Optional;
 
 public class GUI extends Application
 {
-   // declaration of the controls needed
+   // Declaration of the controls needed
    Button compileButton;
 	Button runButton;
-	TextArea mainText;
-	Label message;
-	Label bar;
+   TextArea mainText;
+	Label outputLabel;
 	
-	ChoiceBox<String> FileTab;
+   ChoiceBox<String> FileTab;
+   // Space needed to fix initial button spacing
 	String[] fileOptions = {"File                ", "New Project", "New", "Add", "Delete"};
 	
 	ChoiceBox<String> OpenTab;
 	String[] openOptions = {"Open"};
 	
-	// Background code
+	// Background code to drive
 	Project proj = new Project("");
 	boolean flag = false;
 
@@ -44,28 +39,32 @@ public class GUI extends Application
    {
       // code to indicate what the window will look like
       Font mainFont = new Font("courrier", 24);
-		
+      
+      // File tab aesthetics, set options, initial selection.
 		FileTab = new ChoiceBox<String>();
       FileTab.setStyle("-fx-font: 24px \"Courrier\";");  
       FileTab.getItems().addAll(fileOptions);
       FileTab.getSelectionModel().select(0);
 
+      // OpenTab aesthetics, set options, initial selection.
 		OpenTab = new ChoiceBox<String>();
       OpenTab.setStyle("-fx-font: 24px \"Courrier\";");  
       OpenTab.getItems().addAll(openOptions);
       OpenTab.getSelectionModel().select(0);
 
-      
+      // Main text area layout
 		mainText = new TextArea();
       mainText.setFont(mainFont);
       mainText.setPrefRowCount(15);
       mainText.setPrefColumnCount(50);
       mainText.setWrapText(true);
-		
-		message = new Label("output");
-      message.setFont(mainFont);
-		message.setWrapText(true);
-		
+      
+      // Setup initial output
+		outputLabel = new Label("output");
+      outputLabel.setFont(mainFont);
+		outputLabel.setWrapText(true);
+      
+      // Call handle method when FileTab is used
       FileTab.setOnAction(new EventHandler<ActionEvent>() 
       {
          public void handle(ActionEvent e) 
@@ -73,7 +72,8 @@ public class GUI extends Application
             processFileTab(e);
          }
       });
-		  
+        
+      // Call handle method when the open tab is used
 		OpenTab.setOnAction(new EventHandler<ActionEvent>() 
 		{
          public void handle(ActionEvent e) 
@@ -82,6 +82,7 @@ public class GUI extends Application
          }
       });
 
+      // Create compile button
       compileButton = new Button("Compile");
       compileButton.setFont(mainFont);
       compileButton.setOnAction(new EventHandler<ActionEvent>() 
@@ -91,7 +92,8 @@ public class GUI extends Application
             processCompileButton(e);
          }
       });
-		  
+        
+      // Create run button
 		runButton = new Button("Run");
       runButton.setFont(mainFont);
       runButton.setOnAction(new EventHandler<ActionEvent>() 
@@ -101,37 +103,39 @@ public class GUI extends Application
             processRunButton(e);
          }
       });
-		  
+      
+      // Create main gridpane
 		GridPane outerGrid = new GridPane();
 		outerGrid.add(FileTab, 0, 0, 3, 1);
 		outerGrid.add(OpenTab, 3, 0);
 		outerGrid.add(compileButton, 4, 0);
 		outerGrid.add(runButton, 5, 0);
 		outerGrid.add(mainText, 0, 3, 20, 4);
-      outerGrid.add(message, 0, 7, 10, 3);
+      outerGrid.add(outputLabel, 0, 7, 10, 3);
 
-      //GridPane outerGrid = new GridPane(vpane, panre, mainText, message);
-
+      // Create Scene and set size of window
       Scene theScene = new Scene(outerGrid, 1200, 800);
-      primaryStage.setTitle("The Hutt");
+      primaryStage.setTitle("Hutt");
       primaryStage.setScene(theScene);
       primaryStage.show();
    }
    
+   // When the run button is clicked
    public void processRunButton(ActionEvent event)
    {
       Alert alert = new Alert(AlertType.INFORMATION, 
                      "run!" , ButtonType.OK);
       alert.showAndWait();
    }
-	
-	
+   
+   // When the compile button is clicked
 	public void processCompileButton(ActionEvent event)
    {
       Alert alert = new Alert(AlertType.INFORMATION, 
                      "Compiling!" , ButtonType.OK);
       alert.showAndWait();
       
+      // Try to compile project
       try
       {
          proj.compile();
@@ -142,12 +146,11 @@ public class GUI extends Application
                   "Error processing compile command" , ButtonType.OK);
       }
    }
-	
+   
+   // When a FileTab option is clicked
 	public void processFileTab(ActionEvent event)
-	{
-		//Alert alert = new Alert(AlertType.INFORMATION, "FileTab!" , ButtonType.OK);
-		//alert.showAndWait();
-		
+	{	
+      // if "new project" is clicked
 		if (FileTab.getSelectionModel().getSelectedIndex() == 1)
 		{
          // Create new project
@@ -159,37 +162,57 @@ public class GUI extends Application
       	if (result.isPresent())
       	{
          	String input = dialog.getEditor().getText();
-         	message.setText("New project created: " + input);
-				
-				proj = new Project(input);
-				flag = true;
-
+            proj = new Project(input);
+            flag = true;
+            
+            outputLabel.setText("New project created: " + input);
       	}
       }
       else if (FileTab.getSelectionModel().getSelectedIndex() == 2)
       {
-         // new file 
+         // new file is selected
+         Alert alert = new Alert(AlertType.INFORMATION, "New File!" , ButtonType.OK);
+		   alert.showAndWait();
       }
       else if (FileTab.getSelectionModel().getSelectedIndex() == 3)
       {
-         // add file
+         // add file is selected
+         Alert alert = new Alert(AlertType.INFORMATION, "Add File!" , ButtonType.OK);
+         alert.showAndWait();
+
+         // When adding a new file to open tab, use this code: filesChoice.getItems().add(newFileName); 
+         
+         /*
+         //Implement code from driver: 
+         System.out.println("\nEnter name of file: ");
+			String fileName = scan.nextLine();
+						
+			JavaFile newFile = new JavaFile(fileName);
+		 	proj.addFile(newFile);
+         */
       }
       else if (FileTab.getSelectionModel().getSelectedIndex() == 4)
       {
-         // delete file
+         // delete file is selected
+         Alert alert = new Alert(AlertType.INFORMATION, "Delete File!" , ButtonType.OK);
+         alert.showAndWait();
+         
+         /*
+         // Code from driver:
+         System.out.print("Enter name of file to delete: ");
+			fileName = scan.nextLine();
+			proj.removeFile(fileName);
+         */
       }
-		// When adding a new file to open tab, use this code: filesChoice.getItems().add(newFileName); 
-		
-		
 	}
-	
+   
+   // When an option in the open tab is clicked
 	public void processOpenTab(ActionEvent event)
 	{
 		Alert alert = new Alert(AlertType.INFORMATION, "OpenTab!" , ButtonType.OK);
 		alert.showAndWait();
 	}
 
-	
    public static void main(String[] args)
    {
       launch(args);
