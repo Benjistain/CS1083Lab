@@ -149,6 +149,7 @@ public class GUI extends Application
       {
          // If there is a compile error display this message
          Alert error = new Alert(AlertType.INFORMATION, "Error processing compile command" , ButtonType.OK);
+         error.showAndWait();
       }
    }
    
