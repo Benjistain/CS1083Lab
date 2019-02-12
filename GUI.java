@@ -167,21 +167,18 @@ public class GUI extends Application
 			TextInputDialog dialog = new TextInputDialog();
       	dialog.setTitle("New Project");
       	dialog.setHeaderText("Enter the name of your project");
-         //Optional<String> result = dialog.showAndWait();
-      	//if (result.isPresent())
-      	//{
          dialog.showAndWait();
+         String input = dialog.getEditor().getText();
          
-         	String input = dialog.getEditor().getText();
-            proj = new Project(input);
-            flag = true;
+         proj = new Project(input);
+         flag = true;
             
-            outputLabel.setText("New project created: " + input);
-      	//}
+         outputLabel.setText("New project created: " + input);
       }
       else if (FileTab.getSelectionModel().getSelectedIndex() == 2)
       {
          // new file is selected
+         // This function has not been implemented yet
          Alert alert = new Alert(AlertType.INFORMATION, "New File!" , ButtonType.OK);
 		   alert.showAndWait();
       }
@@ -221,7 +218,16 @@ public class GUI extends Application
 	public void processOpenTab(ActionEvent event)
 	{
 		Alert alert = new Alert(AlertType.INFORMATION, "OpenTab!" , ButtonType.OK);
-		alert.showAndWait();
+      alert.showAndWait();
+      // This method should show the contents of the selected file
+      
+      // driver code
+      /*
+      System.out.print("Enter name of file to read: ");
+		fileName = scan.nextLine();
+		
+      proj.readFile(fileName);
+       */
 	}
 
    public static void main(String[] args)
