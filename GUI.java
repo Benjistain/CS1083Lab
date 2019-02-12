@@ -66,37 +66,41 @@ public class GUI extends Application
       message.setFont(mainFont);
 		message.setWrapText(true);
 		
-  		FileTab.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-               processFileTab(e);
-            }
-        });
+      FileTab.setOnAction(new EventHandler<ActionEvent>() 
+      {
+         public void handle(ActionEvent e) 
+         {
+            processFileTab(e);
+         }
+      });
 		  
 		OpenTab.setOnAction(new EventHandler<ActionEvent>() 
 		{
-            public void handle(ActionEvent e) 
-				{
-               processOpenTab(e);
-            }
+         public void handle(ActionEvent e) 
+         {
+            processOpenTab(e);
+         }
       });
 
-
-		
-      compileButton = new Button("compile");
+      compileButton = new Button("Compile");
       compileButton.setFont(mainFont);
- 		compileButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-               processCompileButton(e);
-            }
-        });
+      compileButton.setOnAction(new EventHandler<ActionEvent>() 
+      {
+         public void handle(ActionEvent e) 
+         {
+            processCompileButton(e);
+         }
+      });
 		  
-		runButton = new Button("run");
+		runButton = new Button("Run");
       runButton.setFont(mainFont);
-		runButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-               processRunButton(e);
-            }
-        });
+      runButton.setOnAction(new EventHandler<ActionEvent>() 
+      {
+         public void handle(ActionEvent e) 
+         {
+            processRunButton(e);
+         }
+      });
 		  
 		GridPane outerGrid = new GridPane();
 		outerGrid.add(FileTab, 0, 0, 3, 1);
@@ -127,8 +131,16 @@ public class GUI extends Application
       Alert alert = new Alert(AlertType.INFORMATION, 
                      "Compiling!" , ButtonType.OK);
       alert.showAndWait();
-		
-		//proj.compile();
+      
+      try
+      {
+         proj.compile();
+      }
+      catch (Exception exc)
+      {
+         Alert error = new Alert(AlertType.INFORMATION, 
+                  "Error processing compile command" , ButtonType.OK);
+      }
    }
 	
 	public void processFileTab(ActionEvent event)
@@ -138,6 +150,7 @@ public class GUI extends Application
 		
 		if (FileTab.getSelectionModel().getSelectedIndex() == 1)
 		{
+         // Create new project
 			// make popup to take name of proj
 			TextInputDialog dialog = new TextInputDialog();
       	dialog.setTitle("New Project");
@@ -152,8 +165,19 @@ public class GUI extends Application
 				flag = true;
 
       	}
-
-		}
+      }
+      else if (FileTab.getSelectionModel().getSelectedIndex() == 2)
+      {
+         // new file 
+      }
+      else if (FileTab.getSelectionModel().getSelectedIndex() == 3)
+      {
+         // add file
+      }
+      else if (FileTab.getSelectionModel().getSelectedIndex() == 4)
+      {
+         // delete file
+      }
 		// When adding a new file to open tab, use this code: filesChoice.getItems().add(newFileName); 
 		
 		
