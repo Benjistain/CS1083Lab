@@ -13,6 +13,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ScrollPane;
 
 public class GUI extends Application
 {
@@ -20,13 +21,16 @@ public class GUI extends Application
    Button compileButton;
 	Button runButton;
    TextArea mainText;
-	Label outputLabel;
+   
+   static String prevOutput = "";
+   static Label outputLabel;
+   static ScrollPane sp; 
 	
-   ChoiceBox<String> FileTab;
+   ChoiceBox<String> fileTab;
    // Space needed to fix initial button spacing
 	String[] fileOptions = {"File                ", "New Project", "New", "Add", "Delete"};
 	
-	ChoiceBox<String> OpenTab;
+	ChoiceBox<String> openTab;
 	String[] openOptions = {"Open"};
 	
 	// Background code to drive
@@ -39,16 +43,16 @@ public class GUI extends Application
       Font mainFont = new Font("courrier", 24);
       
       // File tab aesthetics, set options, initial selection.
-		FileTab = new ChoiceBox<String>();
-      FileTab.setStyle("-fx-font: 24px \"Courrier\";");  
-      FileTab.getItems().addAll(fileOptions);
-      FileTab.getSelectionModel().select(0);
+		fileTab = new ChoiceBox<String>();
+      fileTab.setStyle("-fx-font: 24px \"Courrier\";");  
+      fileTab.getItems().addAll(fileOptions);
+      fileTab.getSelectionModel().select(0);
 
-      // OpenTab aesthetics, set options, initial selection.
-		OpenTab = new ChoiceBox<String>();
-      OpenTab.setStyle("-fx-font: 24px \"Courrier\";");  
-      OpenTab.getItems().addAll(openOptions);
-      OpenTab.getSelectionModel().select(0);
+      // openTab aesthetics, set options, initial selection.
+		openTab = new ChoiceBox<String>();
+      openTab.setStyle("-fx-font: 24px \"Courrier\";");  
+      openTab.getItems().addAll(openOptions);
+      openTab.getSelectionModel().select(0);
 
       // Main text area layout
 		mainText = new TextArea();
@@ -56,27 +60,31 @@ public class GUI extends Application
       mainText.setPrefRowCount(15);
       mainText.setPrefColumnCount(50);
       mainText.setWrapText(true);
+
+      // Create scrollable output area 
+      sp = new ScrollPane();
+      sp.setContent(outputLabel);
       
       // Setup initial output
 		outputLabel = new Label("To begin, create a new project.");
       outputLabel.setFont(mainFont);
 		outputLabel.setWrapText(true);
       
-      // Call handle method when FileTab is used
-      FileTab.setOnAction(new EventHandler<ActionEvent>() 
+      // Call handle method when fileTab is used
+      fileTab.setOnAction(new EventHandler<ActionEvent>() 
       {
          public void handle(ActionEvent e) 
          {
-            processFileTab(e);
+            processfileTab(e);
          }
       });
         
       // Call handle method when the open tab is used
-		OpenTab.setOnAction(new EventHandler<ActionEvent>() 
+		openTab.setOnAction(new EventHandler<ActionEvent>() 
 		{
          public void handle(ActionEvent e) 
          {
-            processOpenTab(e);
+            processopenTab(e);
          }
       });
 
@@ -108,12 +116,12 @@ public class GUI extends Application
       
       // Create main gridpane
 		GridPane outerGrid = new GridPane();
-		outerGrid.add(FileTab, 0, 0, 3, 1);
-		outerGrid.add(OpenTab, 3, 0);
+		outerGrid.add(fileTab, 0, 0, 3, 1);
+		outerGrid.add(openTab, 3, 0);
 		outerGrid.add(compileButton, 4, 0);
 		outerGrid.add(runButton, 5, 0);
-		outerGrid.add(mainText, 0, 3, 20, 4);
-      outerGrid.add(outputLabel, 0, 7, 10, 3);
+      outerGrid.add(mainText, 0, 3, 20, 4);
+      outerGrid.add(sp, 0, 7, 20, 3);
 
       // Create Scene and set size of window
       Scene theScene = new Scene(outerGrid, 1200, 800);
@@ -125,21 +133,20 @@ public class GUI extends Application
    // When the run button is clicked
    public void processRunButton(ActionEvent event)
    {
-      Alert alert = new Alert(AlertType.INFORMATION, "run!" , ButtonType.OK);
-      alert.showAndWait();
-
       // code from driver: 
-      /* 
+      try
+      {
       proj.run();
-      */
+      }
+      catch (Exception exc)
+      {
+         GUI.output("Run Error. See run method in project class");
+      }
    }
    
    // When the compile button is clicked
 	public void processCompileButton(ActionEvent event)
-   {
-      Alert alert = new Alert(AlertType.INFORMATION, "Compiling!" , ButtonType.OK);
-      alert.showAndWait();
-      
+   {  
       // Try to compile project
       try
       {
@@ -153,11 +160,11 @@ public class GUI extends Application
       }
    }
    
-   // When a FileTab option is clicked
-	public void processFileTab(ActionEvent event)
+   // When a fileTab option is clicked
+	public void processfileTab(ActionEvent event)
 	{	
       // if "new project" is clicked
-		if (FileTab.getSelectionModel().getSelectedIndex() == 1)
+		if (fileTab.getSelectionModel().getSelectedIndex() == 1)
 		{
          // Create new project
 			// make popup to take name of proj
@@ -170,33 +177,37 @@ public class GUI extends Application
          proj = new Project(input);
          flag = true;
             
-         outputLabel.setText("New project created: " + input);
+         output("New project created: " + input + "\n");
       }
-      else if (FileTab.getSelectionModel().getSelectedIndex() == 2)
+      else if (fileTab.getSelectionModel().getSelectedIndex() == 2)
       {
          // new file is selected
          // This function has not been implemented yet
          Alert alert = new Alert(AlertType.INFORMATION, "New File!" , ButtonType.OK);
 		   alert.showAndWait();
       }
-      else if (FileTab.getSelectionModel().getSelectedIndex() == 3)
+      else if (fileTab.getSelectionModel().getSelectedIndex() == 3)
       {
          // add file is selected
-         Alert alert = new Alert(AlertType.INFORMATION, "Add File!" , ButtonType.OK);
-         alert.showAndWait();
-
          // When adding a new file to open tab, use this code: filesChoice.getItems().add(newFileName); 
          
-         /*
-         //Implement code from driver: 
-         System.out.println("\nEnter name of file: ");
-			String fileName = scan.nextLine();
+         // Implement code from driver: 
+         // make popup to take name of proj
+			TextInputDialog dialog = new TextInputDialog();
+      	dialog.setTitle("Add File");
+      	dialog.setHeaderText("Enter the name of your file");
+         dialog.showAndWait();
+         String fileName = dialog.getEditor().getText();
 						
 			JavaFile newFile = new JavaFile(fileName);
-		 	proj.addFile(newFile);
-         */
+         proj.addFile(newFile);
+
+         openTab.getItems().add(fileName);
+         
+         output("\nAdded file: " + newFile + ".java");
+         
       }
-      else if (FileTab.getSelectionModel().getSelectedIndex() == 4)
+      else if (fileTab.getSelectionModel().getSelectedIndex() == 4)
       {
          // delete file is selected
          Alert alert = new Alert(AlertType.INFORMATION, "Delete File!" , ButtonType.OK);
@@ -212,21 +223,28 @@ public class GUI extends Application
 	}
    
    // When an option in the open tab is clicked
-	public void processOpenTab(ActionEvent event)
+	public void processopenTab(ActionEvent event)
 	{
-		Alert alert = new Alert(AlertType.INFORMATION, "OpenTab!" , ButtonType.OK);
+		Alert alert = new Alert(AlertType.INFORMATION, "openTab!" , ButtonType.OK);
       alert.showAndWait();
       // This method should show the contents of the selected file
-
-      // driver code
-      /*
-      System.out.print("Enter name of file to read: ");
-		fileName = scan.nextLine();
-		
-      proj.readFile(fileName);
-       */
+      try
+      {
+         String fileName = fileTab.getSelectionModel().getSelectedItem();
+         proj.readFile(fileName);
+      }
+      catch (Exception e)
+      {
+         GUI.output("Error opening file \n");
+      }
 	}
 
+   public static void output(String newOutput)
+   {
+      prevOutput += newOutput;
+      outputLabel.setText(prevOutput);
+      sp.setContent(outputLabel);
+   }
    public static void main(String[] args)
    {
       launch(args);

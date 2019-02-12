@@ -91,8 +91,11 @@ class Project
 	// Read and print the contents of a given file
 	public void readFile(String fileName) throws Exception
 	{
+		// Error occuring because the filename we are reading doesnt have .java at the end. 
+		// Cannot add it here because the serach would break
+		// May be able to get rid of search and use the choicebox index as the index of the array (cindex-1 = projindex)
 		int index = search(fileName);
-		System.out.print(files[index].getContents());
+		GUI.output(files[index].getContents());
 	}
 	
 	// Print a list of the files in the current project
@@ -115,18 +118,18 @@ class Project
 		{
 			Process p1 = Runtime.getRuntime().exec("javac " + files[i].getName()+ ".java");
 			Scanner scan = new Scanner(p1.getErrorStream());
-			System.out.println("\nCompiling "+ files[i].getName()+".java");
+			GUI.output("\n\nCompiling "+ files[i].getName()+".java");
 			if (scan.hasNextLine())
 			{
 				while(scan.hasNextLine())
 				{
-					System.out.print(scan.nextLine() + "\n");
+					GUI.output(scan.nextLine() + "\n");
 				}
 				flag = false;
 			}
 			else
 			{
-				System.out.println("Compiled "+ files[i].getName()+".java successfully");
+				GUI.output("\nCompiled "+ files[i].getName()+".java successfully");
 			}
 			i++;	
 		}
@@ -137,9 +140,12 @@ class Project
 	{
 		Process p1 = Runtime.getRuntime().exec("java " + files[count-1].getName());
 		Scanner scan = new Scanner(p1.getInputStream());
+
+		GUI.output("\n");
 		while(scan.hasNextLine())
 		{
-			System.out.print(scan.nextLine() + "\n");
+			GUI.output("\n" + scan.nextLine());
 		}
+		GUI.output("\n");		
 	}
 }
