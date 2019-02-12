@@ -64,16 +64,17 @@ class Project
 	}
 
 	// Remove a file from an array of files based on the name
-	public void removeFile(String fileName)
+	public int removeFile(String fileName)
 	{
 		// Find the index of the given file
 		int index = search(fileName);
 		// remove the index
+
 		if (index != -1)
 		{
 			if (index >= count)
 			{
-				System.out.println("Error: Project.removeFile (index out of bounds)");
+				GUI.output("\nError: Project->removeFile (index out of bounds)");
 			}
 			else
 			{
@@ -82,20 +83,32 @@ class Project
 					files[i] = files[i+1];
 				
 				count--;
+
 			}
 		}
 		else
-			System.out.println("File not found");
+			GUI.output("\nFile not found");
+
+		return index;
 	}
 	
 	// Read and print the contents of a given file
-	public void readFile(String fileName) throws Exception
+	public void readFile(String fileName, int index) throws Exception
 	{
-		// Error occuring because the filename we are reading doesnt have .java at the end. 
-		// Cannot add it here because the serach would break
-		// May be able to get rid of search and use the choicebox index as the index of the array (cindex-1 = projindex)
-		int index = search(fileName);
-		GUI.output(files[index].getContents());
+		// use the choicebox index as the index of the array (cindex-1 = projindex)
+		try
+		{
+			GUI.output(files[index].getContents());
+		}
+		catch (IndexOutOfBoundsException e)
+		{
+			GUI.output("\nOut of bounds in Project->readFile()");
+			GUI.output("\nIndex used: " + index + "\nMaxIndex: " + count);
+		}
+		catch (Exception e)
+		{
+			GUI.output("\nError in Project->Readfile()");
+		}
 	}
 	
 	// Print a list of the files in the current project

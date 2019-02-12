@@ -14,6 +14,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
+import java.util.Optional;
 
 public class GUI extends Application
 {
@@ -171,22 +172,25 @@ public class GUI extends Application
 			TextInputDialog dialog = new TextInputDialog();
       	dialog.setTitle("New Project");
       	dialog.setHeaderText("Enter the name of your project");
-         dialog.showAndWait();
-         String input = dialog.getEditor().getText();
-         
-         proj = new Project(input);
-         flag = true;
+         Optional<String> result = dialog.showAndWait();
+         if (result.isPresent())
+         {
+            String input = dialog.getEditor().getText();
             
-         output("New project created: " + input + "\n");
+            proj = new Project(input);
+            flag = true;
+               
+            output("\nNew project created: " + input + "\n");
+         }
       }
-      else if (fileTab.getSelectionModel().getSelectedIndex() == 2)
+      else if (flag && fileTab.getSelectionModel().getSelectedIndex() == 2)
       {
          // new file is selected
          // This function has not been implemented yet
          Alert alert = new Alert(AlertType.INFORMATION, "New File!" , ButtonType.OK);
 		   alert.showAndWait();
       }
-      else if (fileTab.getSelectionModel().getSelectedIndex() == 3)
+      else if (flag && fileTab.getSelectionModel().getSelectedIndex() == 3)
       {
          // add file is selected
          // When adding a new file to open tab, use this code: filesChoice.getItems().add(newFileName); 
@@ -196,46 +200,64 @@ public class GUI extends Application
 			TextInputDialog dialog = new TextInputDialog();
       	dialog.setTitle("Add File");
       	dialog.setHeaderText("Enter the name of your file");
-         dialog.showAndWait();
-         String fileName = dialog.getEditor().getText();
-						
-			JavaFile newFile = new JavaFile(fileName);
-         proj.addFile(newFile);
+         Optional<String> result = dialog.showAndWait();
+         if (result.isPresent())
+         {
+            String fileName = dialog.getEditor().getText();
+                     
+            JavaFile newFile = new JavaFile(fileName);
+            proj.addFile(newFile);
 
-         openTab.getItems().add(fileName);
-         
-         output("\nAdded file: " + newFile + ".java");
+            openTab.getItems().add(fileName);
+            
+            output("\nAdded file: " + newFile + ".java");
+         }
          
       }
-      else if (fileTab.getSelectionModel().getSelectedIndex() == 4)
+      else if (flag && fileTab.getSelectionModel().getSelectedIndex() == 4)
       {
          // delete file is selected
-         Alert alert = new Alert(AlertType.INFORMATION, "Delete File!" , ButtonType.OK);
-         alert.showAndWait();
-         
-         /*
-         // Code from driver:
-         System.out.print("Enter name of file to delete: ");
-			fileName = scan.nextLine();
-			proj.removeFile(fileName);
-         */
+         TextInputDialog dialog = new TextInputDialog();
+      	dialog.setTitle("Delete File");
+      	dialog.setHeaderText("Enter the name of the file to delete: ");
+         Optional<String> result = dialog.showAndWait();
+         if (result.isPresent())
+         {
+            String fileName = dialog.getEditor().getText();
+
+            int index = proj.removeFile(fileName);
+            
+            // Remove file from openTab by shifting others on top of it
+            try
+            {
+               openTab.getItems().remove(index+1);
+            }
+            catch( Exception e)
+            {
+               GUI.output("\nError removing from openTab");
+            }
+         }
+      }
+      else if(!flag)
+      {
+         GUI.output("\nCreate project first");
       }
 	}
    
    // When an option in the open tab is clicked
 	public void processopenTab(ActionEvent event)
 	{
-		Alert alert = new Alert(AlertType.INFORMATION, "openTab!" , ButtonType.OK);
-      alert.showAndWait();
       // This method should show the contents of the selected file
       try
       {
-         String fileName = fileTab.getSelectionModel().getSelectedItem();
-         proj.readFile(fileName);
+         String fileName = openTab.getSelectionModel().getSelectedItem();
+         int fileIndex = openTab.getSelectionModel().getSelectedIndex();
+         //GUI.output("\nFileName= "+ fileName + "\nFileIndex= " + fileIndex);
+         proj.readFile(fileName, fileIndex-1);
       }
       catch (Exception e)
       {
-         GUI.output("Error opening file \n");
+         GUI.output("\nError opening file \n");
       }
 	}
 
