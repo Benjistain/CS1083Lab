@@ -21,11 +21,12 @@ public class GUI extends Application
    // Declaration of the controls needed
    Button compileButton;
 	Button runButton;
-   TextArea mainText;
+   static TextArea mainText;
    
    static String prevOutput = "";
    static Label outputLabel;
    static ScrollPane sp; 
+	static ScrollPane tp;
 	
    ChoiceBox<String> fileTab;
    // Space needed to fix initial button spacing
@@ -58,13 +59,17 @@ public class GUI extends Application
       // Main text area layout
 		mainText = new TextArea();
       mainText.setFont(mainFont);
-      mainText.setPrefRowCount(15);
-      mainText.setPrefColumnCount(50);
+     // mainText.setPrefRowCount(15);
+     // mainText.setPrefColumnCount(50);
       mainText.setWrapText(true);
+		mainText.setMaxHeight(300);
+		mainText.setMaxWidth(1000);
 
       // Create scrollable output area 
       sp = new ScrollPane();
       sp.setContent(outputLabel);
+		tp = new ScrollPane();
+      tp.setContent(mainText);
       
       // Setup initial output
 		outputLabel = new Label("To begin, create a new project.");
@@ -141,7 +146,9 @@ public class GUI extends Application
       }
       catch (Exception exc)
       {
-         GUI.output("Run Error. See run method in project class");
+         //GUI.output("Run Error. See run method in project class");
+			Alert error = new Alert(AlertType.ERROR, "Error: Run() in Project.java" , ButtonType.OK);
+         error.showAndWait();	
       }
    }
    
@@ -156,7 +163,7 @@ public class GUI extends Application
       catch (Exception exc)
       {
          // If there is a compile error display this message
-         Alert error = new Alert(AlertType.INFORMATION, "Error processing compile command" , ButtonType.OK);
+         Alert error = new Alert(AlertType.ERROR, "Error processing compile command" , ButtonType.OK);
          error.showAndWait();
       }
    }
@@ -187,7 +194,7 @@ public class GUI extends Application
       {
          // new file is selected
          // This function has not been implemented yet
-         Alert alert = new Alert(AlertType.INFORMATION, "New File!" , ButtonType.OK);
+         Alert alert = new Alert(AlertType.INFORMATION, "New File" , ButtonType.OK);
 		   alert.showAndWait();
       }
       else if (flag && fileTab.getSelectionModel().getSelectedIndex() == 3)
@@ -224,23 +231,36 @@ public class GUI extends Application
          if (result.isPresent())
          {
             String fileName = dialog.getEditor().getText();
-
-            int index = proj.removeFile(fileName);
-            
-            // Remove file from openTab by shifting others on top of it
-            try
-            {
-               openTab.getItems().remove(index+1);
-            }
-            catch( Exception e)
-            {
-               GUI.output("\nError removing from openTab");
-            }
+				
+				try
+				{
+            	int index = proj.removeFile(fileName);
+				
+	            // Remove file from openTab by shifting others on top of it
+	            try
+	            {
+	               openTab.getItems().remove(index+1);
+	            }
+	            catch( Exception e)
+	            {
+	               //GUI.output("\nError removing from openTab");
+						Alert error = new Alert(AlertType.ERROR, "Error: Cannot remove from OpenTab (File may have been removed in background" , ButtonType.OK);
+	         		error.showAndWait();	
+	            }
+				}
+				catch (Exception e)
+				{
+					// Error removing from array
+					Alert error = new Alert(AlertType.ERROR, "Error: Error removing file" , ButtonType.OK);
+         		error.showAndWait();	
+				}
          }
       }
       else if(!flag)
       {
-         GUI.output("\nCreate project first");
+         //GUI.output("\nCreate project first");
+			Alert error = new Alert(AlertType.ERROR, "Error: Must create project before other actions" , ButtonType.OK);
+         error.showAndWait();	
       }
 	}
    
@@ -252,12 +272,21 @@ public class GUI extends Application
       {
          String fileName = openTab.getSelectionModel().getSelectedItem();
          int fileIndex = openTab.getSelectionModel().getSelectedIndex();
-         //GUI.output("\nFileName= "+ fileName + "\nFileIndex= " + fileIndex);
-         proj.readFile(fileName, fileIndex-1);
+         //GUI.output("\nFileName= "+ fileName + "\nFileIndex= " + fileIndex);   
+			proj.readFile(fileName, fileIndex-1);
       }
+		catch (IndexOutOfBoundsException e)
+		{
+			//GUI.output("\nOut of bounds in Project->readFile()");
+			//GUI.output("\nIndex used: " + index + "\nMaxIndex: " + count);
+			Alert error = new Alert(AlertType.ERROR, "Error: Index out of bounds" , ButtonType.OK);
+         error.showAndWait();	
+		}
       catch (Exception e)
       {
-         GUI.output("\nError opening file \n");
+         //GUI.output("\nError opening file \n");
+			Alert error = new Alert(AlertType.ERROR, "Error: Cannot open file" , ButtonType.OK);
+         error.showAndWait();	
       }
 	}
 
@@ -267,6 +296,13 @@ public class GUI extends Application
       outputLabel.setText(prevOutput);
       sp.setContent(outputLabel);
    }
+	
+	public static void fileText(String fileContents)
+	{
+		mainText.setText(fileContents);
+      tp.setContent(mainText);
+	}
+	
    public static void main(String[] args)
    {
       launch(args);

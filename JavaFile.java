@@ -23,18 +23,11 @@ class JavaFile
 	// Load the contents of a file into its "contents" instance variable
 	public void load() throws Exception
 	{
-		try
+		Scanner scan = new Scanner(new File(name + ".java"));
+	
+		while(scan.hasNextLine())
 		{
-			Scanner scan = new Scanner(new File(name + ".java"));
-		
-			while(scan.hasNextLine())
-			{
-				contents += scan.nextLine() + "\n";
-			}
-		}
-		catch(Exception e)
-		{
-			GUI.output("\nError in JavaFile->Load()");
+			contents += scan.nextLine() + "\n";
 		}
 	}
 	

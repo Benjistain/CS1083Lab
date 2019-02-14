@@ -64,7 +64,7 @@ class Project
 	}
 
 	// Remove a file from an array of files based on the name
-	public int removeFile(String fileName)
+	public int removeFile(String fileName) throws IndexOutOfBoundsException, Exception
 	{
 		// Find the index of the given file
 		int index = search(fileName);
@@ -72,19 +72,11 @@ class Project
 
 		if (index != -1)
 		{
-			if (index >= count)
-			{
-				GUI.output("\nError: Project->removeFile (index out of bounds)");
-			}
-			else
-			{
-				// Shift files up to replace the removed file
-				for (int i=index; i<count-1; i++)
-					files[i] = files[i+1];
-				
-				count--;
-
-			}
+			// Shift files up to replace the removed file
+			for (int i=index; i<count-1; i++)
+				files[i] = files[i+1];
+			
+			count--;
 		}
 		else
 			GUI.output("\nFile not found");
@@ -93,22 +85,10 @@ class Project
 	}
 	
 	// Read and print the contents of a given file
-	public void readFile(String fileName, int index) throws Exception
+	public void readFile(String fileName, int index) throws IndexOutOfBoundsException, Exception
 	{
 		// use the choicebox index as the index of the array (cindex-1 = projindex)
-		try
-		{
-			GUI.output(files[index].getContents());
-		}
-		catch (IndexOutOfBoundsException e)
-		{
-			GUI.output("\nOut of bounds in Project->readFile()");
-			GUI.output("\nIndex used: " + index + "\nMaxIndex: " + count);
-		}
-		catch (Exception e)
-		{
-			GUI.output("\nError in Project->Readfile()");
-		}
+		GUI.fileText(files[index].getContents());
 	}
 	
 	// Print a list of the files in the current project
