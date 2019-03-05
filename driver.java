@@ -66,7 +66,7 @@ class driver
 						// Delete a file from the project
 						System.out.print("Enter name of file to delete: ");
 						fileName = scan.nextLine();
-						proj.removeFile(fileName);
+						//proj.removeFile(fileName);
 						break;
 			
 					case 4:
@@ -79,7 +79,7 @@ class driver
 						System.out.print("Enter name of file to read: ");
 						fileName = scan.nextLine();
 						
-						proj.readFile(fileName);
+						//proj.readFile(fileName);
 						break;
 						
 					case 6:

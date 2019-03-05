@@ -20,6 +20,11 @@ class Project
 		files = new JavaFile[1];
 		count = 0;
 	}
+
+	public JavaFile getJavaFile(int index)
+	{
+		return files[index];
+	}
 	
 	public void addFile(JavaFile newFile)
 	{
@@ -109,9 +114,9 @@ class Project
 		int i = 0;
 		while(flag && i < count)
 		{
-			Process p1 = Runtime.getRuntime().exec("javac " + files[i].getName()+ ".java");
+			Process p1 = Runtime.getRuntime().exec("javac " + files[i].getName());
 			Scanner scan = new Scanner(p1.getErrorStream());
-			GUI.output("\n\nCompiling "+ files[i].getName()+".java");
+			GUI.output("\n\nCompiling "+ files[i].getName());
 			if (scan.hasNextLine())
 			{
 				while(scan.hasNextLine())
@@ -122,7 +127,7 @@ class Project
 			}
 			else
 			{
-				GUI.output("\nCompiled "+ files[i].getName()+".java successfully");
+				GUI.output("\nCompiled "+ files[i].getName()+" successfully");
 			}
 			i++;	
 		}

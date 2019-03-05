@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
@@ -14,6 +15,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
+
+import java.io.*;
 import java.util.Optional;
 
 public class GUI extends Application
@@ -21,6 +24,7 @@ public class GUI extends Application
    // Declaration of the controls needed
    Button compileButton;
 	Button runButton;
+	Button saveButton;
    static TextArea mainText;
    
    static String prevOutput = "";
@@ -37,7 +41,9 @@ public class GUI extends Application
 	
 	// Background code to drive
 	Project proj = new Project("");
-	boolean flag = false;
+   boolean flag = false;
+   
+   Stage fileStage;
 
    public void start(Stage primaryStage) throws Exception
    {
@@ -119,6 +125,19 @@ public class GUI extends Application
             processRunButton(e);
          }
       });
+
+      // Create Save button
+		saveButton = new Button("Save");
+      saveButton.setFont(mainFont);
+
+      // When the Save button is clicked
+      saveButton.setOnAction(new EventHandler<ActionEvent>() 
+      {
+         public void handle(ActionEvent e) 
+         {
+            processSaveButton(e);
+         }
+      });
       
       // Create main gridpane
 		GridPane outerGrid = new GridPane();
@@ -126,6 +145,7 @@ public class GUI extends Application
 		outerGrid.add(openTab, 3, 0);
 		outerGrid.add(compileButton, 4, 0);
 		outerGrid.add(runButton, 5, 0);
+		outerGrid.add(saveButton, 6, 0);
       outerGrid.add(mainText, 0, 3, 20, 4);
       outerGrid.add(sp, 0, 7, 20, 3);
 
@@ -149,6 +169,24 @@ public class GUI extends Application
          //GUI.output("Run Error. See run method in project class");
 			Alert error = new Alert(AlertType.ERROR, "Error: Run() in Project.java" , ButtonType.OK);
          error.showAndWait();	
+      }
+   }
+   
+   // When the Save button is clicked
+   public void processSaveButton(ActionEvent event)
+   {
+      int fileIndex = openTab.getSelectionModel().getSelectedIndex()-1;
+      JavaFile file = proj.getJavaFile(fileIndex);
+      file.setContents(mainText.getText());
+
+      try
+      {
+         file.save();
+         output("Saved file");
+      }
+      catch(FileNotFoundException e)
+      {
+         output("File not found... Cannot save");
       }
    }
    
@@ -204,21 +242,29 @@ public class GUI extends Application
          
          // Implement code from driver: 
          // make popup to take name of proj
+         /*
 			TextInputDialog dialog = new TextInputDialog();
       	dialog.setTitle("Add File");
       	dialog.setHeaderText("Enter the name of your file");
          Optional<String> result = dialog.showAndWait();
+         
          if (result.isPresent())
          {
-            String fileName = dialog.getEditor().getText();
-                     
-            JavaFile newFile = new JavaFile(fileName);
+            //String fileName = dialog.getEditor().getText();
+            */
+            File direct = new File(System.getProperty("user.dir"));
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open File");
+            fileChooser.setInitialDirectory(direct);
+            File selectedFile = fileChooser.showOpenDialog(fileStage);
+
+            JavaFile newFile = new JavaFile(selectedFile.getName());
             proj.addFile(newFile);
 
-            openTab.getItems().add(fileName);
+            openTab.getItems().add(selectedFile.getName());
             
-            output("\nAdded file: " + newFile + ".java");
-         }
+            output("\nAdded file: " + newFile + "\n");
+         //}
          
       }
       else if (flag && fileTab.getSelectionModel().getSelectedIndex() == 4)

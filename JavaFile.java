@@ -19,11 +19,27 @@ class JavaFile
 	 	this.name = name;
 		contents = "";
 	}
+
+	// Mutator for contents
+	public void setContents(String newContents)
+	{
+		contents = newContents;
+	}
+
+	public void save() throws FileNotFoundException
+	{
+		// Save contents into the javafile
+		PrintWriter outFile = new PrintWriter(new File(name));
+		outFile.println(contents);
+		
+		if (outFile != null)
+			outFile.close();
+	}
 	
 	// Load the contents of a file into its "contents" instance variable
 	public void load() throws Exception
 	{
-		Scanner scan = new Scanner(new File(name + ".java"));
+		Scanner scan = new Scanner(new File(name));
 	
 		while(scan.hasNextLine())
 		{
