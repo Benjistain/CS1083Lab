@@ -136,7 +136,8 @@ class Project
 	//Run the last file in array
 	public void run() throws Exception
 	{
-		Process p1 = Runtime.getRuntime().exec("java " + files[count-1].getName());
+		int nameLength = files[count-1].getName().length();
+		Process p1 = Runtime.getRuntime().exec("java " + files[count-1].getName().substring(0, nameLength - 5));
 		Scanner scan = new Scanner(p1.getInputStream());
 
 		GUI.output("\n");
