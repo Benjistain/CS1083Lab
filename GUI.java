@@ -15,7 +15,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
-
 import java.io.*;
 import java.util.Optional;
 
@@ -245,16 +244,7 @@ public class GUI extends Application
          
          // Implement code from driver: 
          // make popup to take name of proj
-         /*
-			TextInputDialog dialog = new TextInputDialog();
-      	dialog.setTitle("Add File");
-      	dialog.setHeaderText("Enter the name of your file");
-         Optional<String> result = dialog.showAndWait();
          
-         if (result.isPresent())
-         {
-            //String fileName = dialog.getEditor().getText();
-            */
             File direct = new File(System.getProperty("user.dir"));
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open File");
@@ -320,33 +310,28 @@ public class GUI extends Application
 	{
       // first check if the content of the text area matches the content of the file. 
       // If it does not, ask the user if he wants to save the file first. If the answer is 
-      // yes, save the file (like under the “save file”option) before putting the new one in.
-      if (!content matches)
-      {
-         Alert alert = new Alert(AlertType.CONFIRMATION);
-         alert.setTitle("Confirmation Dialog with Custom Actions");
-         alert.setHeaderText("Look, a Confirmation Dialog with Custom Actions");
-         alert.setContentText("Choose your option.");
-
-         ButtonType buttonTypeOne = new ButtonType("One");
-         ButtonType buttonTypeTwo = new ButtonType("Two");
-         ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-
-         alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeThree, buttonTypeCancel);
-
-         Optional<ButtonType> result = alert.showAndWait();
-         if (result.get() == buttonTypeOne){
-            // ... user chose "One"
-            // Save the file using save method
-         } else if (result.get() == buttonTypeTwo) {
-            // ... user chose "Two"
-            // Dont save the file but continue on.
-         } else {
-            // ... user chose CANCEL or closed the dialog
-            // Stop, dont run the rest of the method
-         }
-      }
-      
+		try
+		{
+		
+	      if (!mainText.getText().equals(proj.getJavaFile(proj.getCurrentFile()).getContents()))
+	      {
+		      Alert alert = new Alert(AlertType.CONFIRMATION, 
+		                     "Do you want to save this file?" , 
+		                     ButtonType.YES, ButtonType.NO);
+		      alert.showAndWait();
+		
+		      if (alert.getResult() == ButtonType.YES)
+		      {
+		        proj.getJavaFile(proj.getCurrentFile()).setContents(mainText.getText());
+				  proj.getJavaFile((proj.getCurrentFile())).save();
+				}
+	      }
+     }
+	  catch (Exception e)
+	  {
+	  
+	  }
+	   
       // This method should show the contents of the selected file
       try
       {
@@ -354,6 +339,7 @@ public class GUI extends Application
          int fileIndex = openTab.getSelectionModel().getSelectedIndex();
          //GUI.output("\nFileName= "+ fileName + "\nFileIndex= " + fileIndex);   
 			proj.readFile(fileName, fileIndex-1);
+			proj.setCurrentFile(fileIndex-1);
       }
 		catch (IndexOutOfBoundsException e)
 		{

@@ -12,6 +12,7 @@ class Project
 	private String name;
 	private JavaFile[] files;
 	private int count;
+	private int currentFile; 
 	
 	// Constructor
 	public Project(String name)
@@ -19,7 +20,19 @@ class Project
 	 	this.name = name;
 		files = new JavaFile[1];
 		count = 0;
+		currentFile = -1;
 	}
+	
+	public int getCurrentFile()
+	{
+		return currentFile;
+	}
+	
+	public void setCurrentFile(int newFile)
+	{
+		currentFile = newFile;
+	}
+
 
 	public JavaFile getJavaFile(int index)
 	{
