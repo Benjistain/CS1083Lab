@@ -226,6 +226,9 @@ public class GUI extends Application
             flag = true;
                
             output("\nNew project created: " + input + "\n");
+            
+            // Add setDisable(false) lines for every control that relies on a project.
+            // Also add setDisable(true) to each of the instantiations of those controls.
          }
       }
       else if (flag && fileTab.getSelectionModel().getSelectedIndex() == 2)
@@ -269,6 +272,8 @@ public class GUI extends Application
       }
       else if (flag && fileTab.getSelectionModel().getSelectedIndex() == 4)
       {
+         // This control should be permanently disabled
+
          // delete file is selected
          TextInputDialog dialog = new TextInputDialog();
       	dialog.setTitle("Delete File");
@@ -313,6 +318,35 @@ public class GUI extends Application
    // When an option in the open tab is clicked
 	public void processopenTab(ActionEvent event)
 	{
+      // first check if the content of the text area matches the content of the file. 
+      // If it does not, ask the user if he wants to save the file first. If the answer is 
+      // yes, save the file (like under the “save file”option) before putting the new one in.
+      if (!content matches)
+      {
+         Alert alert = new Alert(AlertType.CONFIRMATION);
+         alert.setTitle("Confirmation Dialog with Custom Actions");
+         alert.setHeaderText("Look, a Confirmation Dialog with Custom Actions");
+         alert.setContentText("Choose your option.");
+
+         ButtonType buttonTypeOne = new ButtonType("One");
+         ButtonType buttonTypeTwo = new ButtonType("Two");
+         ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+
+         alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeThree, buttonTypeCancel);
+
+         Optional<ButtonType> result = alert.showAndWait();
+         if (result.get() == buttonTypeOne){
+            // ... user chose "One"
+            // Save the file using save method
+         } else if (result.get() == buttonTypeTwo) {
+            // ... user chose "Two"
+            // Dont save the file but continue on.
+         } else {
+            // ... user chose CANCEL or closed the dialog
+            // Stop, dont run the rest of the method
+         }
+      }
+      
       // This method should show the contents of the selected file
       try
       {
