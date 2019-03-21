@@ -6,6 +6,7 @@
 //*Add next editlist here*
 ///////////////////////////////////////
 import java.util.Scanner;
+import java.io.IOException;
 
 class Project
 {
@@ -147,17 +148,27 @@ class Project
 	}
 	
 	//Run the last file in array
-	public void run() throws Exception
+	public void run() throws IOException, Exception
 	{
-		int nameLength = files[count-1].getName().length();
-		Process p1 = Runtime.getRuntime().exec("java " + files[count-1].getName().substring(0, nameLength - 5));
+		//int nameLength = files[count-1].getName().length();
+		Process p1 = Runtime.getRuntime().exec("java " + name);
 		Scanner scan = new Scanner(p1.getInputStream());
+		Scanner err = new Scanner(p1.getErrorStream());
 
-		GUI.output("\n");
-		while(scan.hasNextLine())
+		if (err.hasNextLine())
 		{
-			GUI.output("\n" + scan.nextLine());
+			throw new IOException("Must compile first");
+			
 		}
-		GUI.output("\n");		
+		else
+		{
+			GUI.output("\n");
+			while(scan.hasNextLine())
+			{
+				GUI.output("\n" + scan.nextLine());
+			}
+			GUI.output("\n");	
+		}
+				
 	}
 }

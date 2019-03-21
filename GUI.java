@@ -17,6 +17,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import java.io.*;
 import java.util.Optional;
+import javafx.stage.WindowEvent;
 
 public class GUI extends Application
 {
@@ -80,6 +81,36 @@ public class GUI extends Application
 		outputLabel = new Label("To begin, create a new project.");
       outputLabel.setFont(mainFont);
 		outputLabel.setWrapText(true);
+		
+		// Call method when window is closed
+		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>()
+		{
+			public void handle(WindowEvent we) 
+			{
+				try
+				{
+		
+			      if (!mainText.getText().equals(proj.getJavaFile(proj.getCurrentFile()).getContents()))
+			      {
+				      Alert alert = new Alert(AlertType.CONFIRMATION, 
+				                     "Do you want to save this file?" , 
+				                     ButtonType.YES, ButtonType.NO);
+				      alert.showAndWait();
+			
+				      if (alert.getResult() == ButtonType.YES)
+				      {
+				        proj.getJavaFile(proj.getCurrentFile()).setContents(mainText.getText());
+						  proj.getJavaFile((proj.getCurrentFile())).save();
+						}
+	      		}
+     			}
+			   catch (Exception e)
+			   {
+			  		output("Error saving file before close");
+			   }
+	   
+			}
+		});
       
       // Call handle method when fileTab is used
       fileTab.setOnAction(new EventHandler<ActionEvent>() 
@@ -163,6 +194,11 @@ public class GUI extends Application
       {
       proj.run();
       }
+		catch (IOException e)
+		{
+			Alert error = new Alert(AlertType.ERROR, e.getMessage() , ButtonType.OK);
+         error.showAndWait();
+		}
       catch (Exception exc)
       {
          //GUI.output("Run Error. See run method in project class");
@@ -220,6 +256,11 @@ public class GUI extends Application
          if (result.isPresent())
          {
             String input = dialog.getEditor().getText();
+				
+				if (input.equals(""))
+				{
+					input = "Project";
+				}
             
             proj = new Project(input);
             flag = true;
@@ -234,8 +275,27 @@ public class GUI extends Application
       {
          // new file is selected
          // This function has not been implemented yet
-         Alert alert = new Alert(AlertType.INFORMATION, "New File" , ButtonType.OK);
-		   alert.showAndWait();
+			
+			TextInputDialog dialog = new TextInputDialog();
+      	dialog.setTitle("New Project");
+      	dialog.setHeaderText("Enter the name of your new file (With extension)");
+         Optional<String> result = dialog.showAndWait();
+         if (result.isPresent())
+         {
+            String input = dialog.getEditor().getText();
+				
+				if (input.equals(""))
+				{
+					input = "File";
+				}
+
+				JavaFile newFile = new JavaFile(input);
+				newFile.setContents("//New File");
+            proj.addFile(newFile);
+				
+				openTab.getItems().add(newFile.getName());
+            output("\nAdded file: " + newFile + "\n");
+         }		
       }
       else if (flag && fileTab.getSelectionModel().getSelectedIndex() == 3)
       {
@@ -329,7 +389,7 @@ public class GUI extends Application
      }
 	  catch (Exception e)
 	  {
-	  
+	  	//output("Error saving file before close");
 	  }
 	   
       // This method should show the contents of the selected file
