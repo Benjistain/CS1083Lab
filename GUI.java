@@ -311,12 +311,12 @@ public class GUI extends Application
             fileChooser.setInitialDirectory(direct);
             File selectedFile = fileChooser.showOpenDialog(fileStage);
 
-            JavaFile newFile = new JavaFile(selectedFile.getName());
+            JavaFile newFile = new JavaFile(selectedFile.getAbsolutePath());
             proj.addFile(newFile);
-
-            openTab.getItems().add(selectedFile.getName());
+				String openString = selectedFile.getAbsolutePath().substring(selectedFile.getAbsolutePath().lastIndexOf("\\")+1, selectedFile.getAbsolutePath().indexOf("."));
+            openTab.getItems().add(openString);
             
-            output("\nAdded file: " + newFile + "\n");
+            output("\nAdded file: " + openString + "\n");
          //}
          
       }
